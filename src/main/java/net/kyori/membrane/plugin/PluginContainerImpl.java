@@ -59,11 +59,11 @@ final class PluginContainerImpl implements PluginContainer {
       .filter(method -> method.isAnnotationPresent(Plugin.Enable.class))
       .collect(MoreCollectors.toOptional())
       .ifPresent(Exceptions.unwrappingRethrowConsumer(method -> method.invoke(this.instance)));
-    this.state = State.DISABLE;
+    this.state = State.ACTIVE;
   }
 
   void disable() {
-    this.expectState(State.DISABLE);
+    this.expectState(State.ACTIVE);
     Arrays.stream(this.instance.getClass().getDeclaredMethods())
       .filter(method -> method.isAnnotationPresent(Plugin.Disable.class))
       .collect(MoreCollectors.toOptional())
@@ -107,6 +107,6 @@ final class PluginContainerImpl implements PluginContainer {
   private enum State {
     CONSTRUCT,
     ENABLE,
-    DISABLE;
+    ACTIVE;
   }
 }

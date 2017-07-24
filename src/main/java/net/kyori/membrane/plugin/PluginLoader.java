@@ -26,6 +26,7 @@ package net.kyori.membrane.plugin;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.Lists;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
@@ -55,6 +56,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +75,7 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * A plugin loader.
  */
-public final class PluginLoader {
+public final class PluginLoader implements PluginFinder {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PluginLoader.class);
   private static final String PLUGIN_DEFINITION_TYPE = "Lnet/kyori/membrane/plugin/Plugin;";
@@ -83,7 +85,8 @@ public final class PluginLoader {
   private static final String FILE_PROTOCOL = "file";
   private static final String JAVA_HOME = System.getProperty("java.home");
   private final List<Candidate> candidates = new ArrayList<>();
-  private final Map<String, PluginContainerImpl> containers = new HashMap<>();
+  private final List<PluginContainerImpl> containers = new ArrayList<>();
+  private final Map<String, PluginContainerImpl> namedContainers = new HashMap<>();
   private final Supplier<SimpleFileVisitor<Path>> classPathVisitor = Suppliers.memoize(() -> new SimpleFileVisitor<Path>() {
     @Override
     public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
@@ -215,7 +218,8 @@ public final class PluginLoader {
         LOGGER.error(String.format("Encountered an exception while constructing plugin '%s'", container.id()), t);
         return false;
       }
-      this.containers.put(container.id(), container);
+      this.containers.add(container);
+      this.namedContainers.put(container.id(), container);
     }
     this.state = State.ENABLE;
     return true;
@@ -226,17 +230,30 @@ public final class PluginLoader {
    */
   public void enable() {
     this.ensureState(State.ENABLE);
-    this.containers.values().forEach(PluginContainerImpl::enable);
-    this.state = State.DISABLE;
+    this.containers.forEach(PluginContainerImpl::enable);
+    this.state = State.ACTIVE;
   }
 
   /**
    * Disable loaded containers.
    */
   public void disable() {
-    this.ensureState(State.DISABLE);
-    this.containers.values().forEach(PluginContainerImpl::disable);
+    this.ensureState(State.ACTIVE);
+    Lists.reverse(this.containers).forEach(PluginContainerImpl::disable);
     this.state = null; // set to invalid state, nothing should happen after disable
+  }
+
+  @Nonnull
+  @Override
+  public Collection<PluginContainer> all() {
+    return Collections.unmodifiableList(this.containers);
+  }
+
+  @Nullable
+  @Override
+  public PluginContainer find(@Nonnull final String id) {
+    this.ensureState(State.ACTIVE);
+    return this.namedContainers.get(id);
   }
 
   private void ensureDependenciesSatisfied() {
@@ -265,7 +282,7 @@ public final class PluginLoader {
   }
 
   private void ensureState(final State expected) {
-    checkState(this.state != null, "container is in an invalid state");
+    checkState(this.state != null, "loader is in an invalid state");
     checkState(this.state == expected, "expected loader state to be %s, was %s", expected, this.state);
   }
 
@@ -281,7 +298,7 @@ public final class PluginLoader {
     FIND,
     CONSTRUCT,
     ENABLE,
-    DISABLE;
+    ACTIVE;
   }
 
   private final class Visitor extends ClassVisitor {
