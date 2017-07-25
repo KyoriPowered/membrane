@@ -24,10 +24,6 @@
 package net.kyori.membrane.plugin;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.MoreCollectors;
-import net.kyori.lunar.exception.Exceptions;
-
-import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 
@@ -55,19 +51,17 @@ final class PluginContainerImpl implements PluginContainer {
 
   void enable() {
     this.expectState(State.ENABLE);
-    Arrays.stream(this.instance.getClass().getDeclaredMethods())
-      .filter(method -> method.isAnnotationPresent(Plugin.Enable.class))
-      .collect(MoreCollectors.toOptional())
-      .ifPresent(Exceptions.unwrappingRethrowConsumer(method -> method.invoke(this.instance)));
+    if(this.instance instanceof ModularPlugin) {
+      ((ModularPlugin) this.instance).enable();
+    }
     this.state = State.ACTIVE;
   }
 
   void disable() {
     this.expectState(State.ACTIVE);
-    Arrays.stream(this.instance.getClass().getDeclaredMethods())
-      .filter(method -> method.isAnnotationPresent(Plugin.Disable.class))
-      .collect(MoreCollectors.toOptional())
-      .ifPresent(Exceptions.unwrappingRethrowConsumer(method -> method.invoke(this.instance)));
+    if(this.instance instanceof ModularPlugin) {
+      ((ModularPlugin) this.instance).disable();
+    }
     this.state = null; // set to invalid state, nothing should happen after disable
   }
 

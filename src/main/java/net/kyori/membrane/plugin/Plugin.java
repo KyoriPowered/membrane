@@ -93,22 +93,4 @@ public @interface Plugin {
     @Nonnull
     String version() default "";
   }
-
-  /**
-   * Annotates a method which should be invoked when a plugin is disabled.
-   */
-  @Documented
-  @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  @interface Disable {
-  }
-
-  /**
-   * Annotates a method which should be invoked when a plugin is enabled.
-   */
-  @Documented
-  @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  @interface Enable {
-  }
 }
