@@ -23,6 +23,9 @@
  */
 package net.kyori.membrane.facet;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 /**
  * A facet that may be connected to a service.
  */
@@ -30,11 +33,17 @@ public interface Connectable extends Facet {
 
   /**
    * Connects to the service.
+   *
+   * @throws IOException if an I/O exception occurs while connecting
+   * @throws TimeoutException if a timeout exception occurs while connecting
    */
-  void connect();
+  void connect() throws IOException, TimeoutException;
 
   /**
    * Disconnects from the service.
+   *
+   * @throws IOException if an I/O exception occurs while disconnecting
+   * @throws TimeoutException if a timeout exception occurs while disconnecting
    */
-  void disconnect();
+  void disconnect() throws IOException, TimeoutException;
 }

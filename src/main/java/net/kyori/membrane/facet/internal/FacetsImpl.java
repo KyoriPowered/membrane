@@ -23,6 +23,7 @@
  */
 package net.kyori.membrane.facet.internal;
 
+import net.kyori.lunar.exception.Exceptions;
 import net.kyori.membrane.facet.Connectable;
 import net.kyori.membrane.facet.Enableable;
 import net.kyori.membrane.facet.Facet;
@@ -46,13 +47,13 @@ public class FacetsImpl implements Facets {
   @Override
   public void enable() {
     this.of(Enableable.class).forEach(Enableable::enable);
-    this.of(Connectable.class).forEach(Connectable::connect);
+    this.of(Connectable.class).forEach(Exceptions.rethrowConsumer(Connectable::connect));
   }
 
   // TODO(kashike): order?
   @Override
   public void disable() {
-    this.of(Connectable.class).forEach(Connectable::disconnect);
+    this.of(Connectable.class).forEach(Exceptions.rethrowConsumer(Connectable::disconnect));
     this.of(Enableable.class).forEach(Enableable::disable);
   }
 
