@@ -21,14 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.membrane.facet;
+package net.kyori.membrane.facet.internal;
 
-/**
- * A marker interface for a facet.
- *
- * @see Connectable
- * @see Enableable
- */
-public interface Facet {
+import net.kyori.membrane.facet.Connectable;
+import net.kyori.membrane.facet.Enableable;
+import net.kyori.membrane.facet.Facet;
 
+import java.util.Set;
+import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+public class FacetsImpl implements Facets {
+
+  private final Set<Facet> facets;
+
+  @Inject
+  protected FacetsImpl(final Set<Facet> facets) {
+    this.facets = facets;
+  }
+
+  // TODO(kashike): order?
+  @Override
+  public void enable() {
+    this.of(Enableable.class).forEach(Enableable::enable);
+    this.of(Connectable.class).forEach(Connectable::connect);
+  }
+
+  // TODO(kashike): order?
+  @Override
+  public void disable() {
+    this.of(Connectable.class).forEach(Connectable::disconnect);
+    this.of(Enableable.class).forEach(Enableable::disable);
+  }
+
+  @Nonnull
+  @Override
+  public Stream<? extends Facet> all() {
+    return this.facets.stream();
+  }
 }

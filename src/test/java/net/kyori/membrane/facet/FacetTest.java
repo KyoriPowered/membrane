@@ -24,9 +24,12 @@
 package net.kyori.membrane.facet;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
+import net.kyori.membrane.facet.internal.Facets;
+import net.kyori.membrane.facet.internal.FacetsImpl;
 import net.kyori.violet.AbstractModule;
 import org.junit.Test;
+
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,24 +45,38 @@ public class FacetTest {
         this.bind(Facets.class).to(FacetsImpl.class);
 
         this.bind(FacetA.class).to(FacetAImpl.class);
-        this.bind(FacetB.class).to(FacetBImpl.class);
         FacetBinder.create(this)
           .add(FacetA.class)
-          .add(FacetB.class);
+          .add(FacetB.class)
+          .add(FacetC.class);
 
         this.requestInjection(container);
       }
     });
 
-    assertEquals(2, container.facets.all().count());
-    assertEquals(1, container.facets.of(SomeFacet.class).count());
+    assertEquals(3, container.facets.all().count()); // A, B, C
+    assertEquals(1, container.facets.of(SomeFacet.class).count()); // A
+    assertEquals(2, container.facets.of(Enableable.class).count()); // A, C
+    assertEquals(2, container.facets.of(Connectable.class).count()); // B, C
   }
 
   private interface SomeFacet extends Facet {}
-  private interface FacetA extends Facet, SomeFacet {}
-  private static class FacetAImpl implements FacetA {}
-  private interface FacetB extends Facet {}
-  private static class FacetBImpl implements FacetB {}
+
+  private interface FacetA extends Enableable, SomeFacet {}
+  private static class FacetAImpl implements FacetA {
+    @Override public void enable() {}
+    @Override public void disable() {}
+  }
+  private static class FacetB implements Connectable {
+    @Override public void connect() {}
+    @Override public void disconnect() {}
+  }
+  private static class FacetC implements Connectable, Enableable {
+    @Override public void connect() {}
+    @Override public void disconnect() {}
+    @Override public void enable() {}
+    @Override public void disable() {}
+  }
 
   private static class Container {
     @Inject Facets facets;

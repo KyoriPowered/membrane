@@ -23,32 +23,18 @@
  */
 package net.kyori.membrane.facet;
 
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-
 /**
- * A collection of facets.
+ * A facet that may be connected to a service.
  */
-public interface Facets {
+public interface Connectable extends Facet {
 
   /**
-   * Gets a stream of all bound facets.
-   *
-   * @return a stream of all bound facets
+   * Connects to the service.
    */
-  @Nonnull
-  Stream<? extends Facet> all();
+  void connect();
 
   /**
-   * Gets a stream of all bound facets of the specified type.
-   *
-   * @param type the type
-   * @param <F> the type
-   * @return a stream of all bound facets of the specified type
+   * Disconnects from the service.
    */
-  @Nonnull
-  default <F extends Facet> Stream<? extends F> of(@Nonnull final Class<F> type) {
-    return (Stream<? extends F>) this.all().filter(type::isInstance);
-  }
+  void disconnect();
 }

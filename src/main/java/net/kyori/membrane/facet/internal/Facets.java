@@ -21,26 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.membrane.facet;
+package net.kyori.membrane.facet.internal;
 
-import java.util.Set;
+import net.kyori.membrane.facet.Facet;
+
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
-public final class FacetsImpl implements Facets {
+/**
+ * A collection of facets.
+ */
+public interface Facets {
 
-  private final Set<Facet> facets;
-
-  @Inject
-  FacetsImpl(final Set<Facet> facets) {
-    this.facets = facets;
-  }
-
+  /**
+   * Gets a stream of all bound facets.
+   *
+   * @return a stream of all bound facets
+   */
   @Nonnull
-  @Override
-  public Stream<? extends Facet> all() {
-    return this.facets.stream();
+  Stream<? extends Facet> all();
+
+  /**
+   * Gets a stream of all bound facets of the specified type.
+   *
+   * @param type the type
+   * @param <F> the type
+   * @return a stream of all bound facets of the specified type
+   */
+  @Nonnull
+  default <F extends Facet> Stream<? extends F> of(@Nonnull final Class<F> type) {
+    return (Stream<? extends F>) this.all().filter(type::isInstance);
   }
+
+  /**
+   * Enables all facets.
+   */
+  void enable();
+
+  /**
+   * Disables all facets.
+   */
+  void disable();
 }

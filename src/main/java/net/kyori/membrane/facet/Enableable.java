@@ -24,11 +24,17 @@
 package net.kyori.membrane.facet;
 
 /**
- * A marker interface for a facet.
- *
- * @see Connectable
- * @see Enableable
+ * A facet that may be enabled.
  */
-public interface Facet {
+public interface Enableable extends Facet {
 
+  /**
+   * Enables the facet.
+   */
+  void enable();
+
+  /**
+   * Disables the facet.
+   */
+  void disable();
 }
