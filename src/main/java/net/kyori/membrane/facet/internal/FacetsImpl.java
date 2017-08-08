@@ -43,18 +43,16 @@ public class FacetsImpl implements Facets {
     this.facets = facets;
   }
 
-  // TODO(kashike): order?
   @Override
   public void enable() {
-    this.of(Enableable.class).forEach(Enableable::enable);
     this.of(Connectable.class).forEach(Exceptions.rethrowConsumer(Connectable::connect));
+    this.of(Enableable.class).forEach(Enableable::enable);
   }
 
-  // TODO(kashike): order?
   @Override
   public void disable() {
-    this.of(Connectable.class).forEach(Exceptions.rethrowConsumer(Connectable::disconnect));
     this.of(Enableable.class).forEach(Enableable::disable);
+    this.of(Connectable.class).forEach(Exceptions.rethrowConsumer(Connectable::disconnect));
   }
 
   @Nonnull
