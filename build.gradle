@@ -58,6 +58,12 @@ signing {
     sign configurations.archives
 }
 
+jar {
+    manifest.attributes(
+      'Automatic-Module-Name': 'net.kyori.membrane'
+    )
+}
+
 if(project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
     uploadArchives {
         repositories {
