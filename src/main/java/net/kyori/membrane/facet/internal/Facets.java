@@ -23,6 +23,7 @@
  */
 package net.kyori.membrane.facet.internal;
 
+import com.google.inject.ImplementedBy;
 import net.kyori.membrane.facet.Facet;
 
 import java.util.stream.Stream;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
 /**
  * A collection of facets.
  */
+@ImplementedBy(FacetsImpl.class)
 public interface Facets {
 
   /**
