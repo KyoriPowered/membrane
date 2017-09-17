@@ -83,7 +83,7 @@ public class FacetsImpl implements Facets {
     }
 
     void enable() throws IOException, TimeoutException {
-      this.enabled = !(this.facet instanceof Activatable) || ((Activatable) this.facet).active();
+      this.enabled = Activatable.predicate().test(this.facet);
       if(!this.enabled) {
         return;
       }

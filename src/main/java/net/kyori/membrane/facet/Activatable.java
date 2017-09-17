@@ -23,7 +23,28 @@
  */
 package net.kyori.membrane.facet;
 
+import java.util.function.Predicate;
+
+import javax.annotation.Nonnull;
+
 public interface Activatable extends Facet {
+
+  /**
+   * A predicate that matches facets that are not {@link Activatable} or are {@link #active() active}.
+   */
+  Predicate<? extends Facet> PREDICATE = facet -> !(facet instanceof Activatable) || ((Activatable) facet).active();
+
+  /**
+   * Gets a predicate that matches facets that are not {@link Activatable} or are {@link #active() active}.
+   *
+   * @param <F> the facet type
+   * @return a predicate
+   * @see #PREDICATE
+   */
+  @Nonnull
+  static <F extends Facet> Predicate<F> predicate() {
+    return (Predicate<F>) PREDICATE;
+  }
 
   /**
    * Checks if this facet should be active.
