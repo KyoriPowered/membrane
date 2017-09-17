@@ -26,6 +26,7 @@ package net.kyori.membrane.facet.internal;
 import com.google.inject.ImplementedBy;
 import net.kyori.membrane.facet.Facet;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -54,6 +55,19 @@ public interface Facets {
   @Nonnull
   default <F extends Facet> Stream<? extends F> of(@Nonnull final Class<F> type) {
     return (Stream<? extends F>) this.all().filter(type::isInstance);
+  }
+
+  /**
+   * Gets a stream of all bound facets of the specified type that match the specified predicate.
+   *
+   * @param type the type
+   * @param predicate the predicate
+   * @param <F> the type
+   * @return a stream of all bound facets of the specified type
+   */
+  @Nonnull
+  default <F extends Facet> Stream<? extends F> of(@Nonnull final Class<F> type, @Nonnull final Predicate<F> predicate) {
+    return this.of(type).filter(predicate);
   }
 
   /**

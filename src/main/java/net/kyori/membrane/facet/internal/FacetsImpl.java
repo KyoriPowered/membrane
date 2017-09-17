@@ -24,19 +24,25 @@
 package net.kyori.membrane.facet.internal;
 
 import net.kyori.lunar.exception.Exceptions;
+import net.kyori.membrane.facet.Activatable;
 import net.kyori.membrane.facet.Connectable;
 import net.kyori.membrane.facet.Enableable;
 import net.kyori.membrane.facet.Facet;
 
+import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 public class FacetsImpl implements Facets {
 
   private final Set<Facet> facets;
+  @Nullable private Set<Entry> entries;
 
   @Inject
   protected FacetsImpl(final Set<Facet> facets) {
@@ -45,19 +51,64 @@ public class FacetsImpl implements Facets {
 
   @Override
   public void enable() {
-    this.of(Connectable.class).forEach(Exceptions.rethrowConsumer(Connectable::connect));
-    this.of(Enableable.class).forEach(Enableable::enable);
+    if(this.entries != null) {
+      throw new IllegalStateException("facets already enabled");
+    }
+    this.entries = this.facets.stream().map(Entry::new).collect(Collectors.toSet());
+    this.entries.forEach(Exceptions.rethrowConsumer(Entry::enable));
   }
 
   @Override
   public void disable() {
-    this.of(Enableable.class).forEach(Enableable::disable);
-    this.of(Connectable.class).forEach(Exceptions.rethrowConsumer(Connectable::disconnect));
+    if(this.entries == null) {
+      throw new IllegalStateException("facets were not enabled");
+    }
+    this.entries.forEach(Exceptions.rethrowConsumer(Entry::disable));
+    this.entries = null;
   }
 
   @Nonnull
   @Override
   public Stream<? extends Facet> all() {
     return this.facets.stream();
+  }
+
+  private static class Entry {
+
+    private final Facet facet;
+    private boolean enabled;
+
+    Entry(final Facet facet) {
+      this.facet = facet;
+    }
+
+    void enable() throws IOException, TimeoutException {
+      this.enabled = !(this.facet instanceof Activatable) || ((Activatable) this.facet).active();
+      if(!this.enabled) {
+        return;
+      }
+
+      if(this.facet instanceof Connectable) {
+        ((Connectable) this.facet).connect();
+      }
+
+      if(this.facet instanceof Enableable) {
+        ((Enableable) this.facet).enable();
+      }
+    }
+
+    void disable() throws IOException, TimeoutException {
+      if(!this.enabled) {
+        return;
+      }
+
+      if(this.facet instanceof Enableable) {
+        ((Enableable) this.facet).disable();
+      }
+
+      if(this.facet instanceof Connectable) {
+        ((Connectable) this.facet).disconnect();
+      }
+    }
   }
 }
