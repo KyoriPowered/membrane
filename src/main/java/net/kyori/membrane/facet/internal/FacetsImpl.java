@@ -30,6 +30,7 @@ import net.kyori.membrane.facet.Enableable;
 import net.kyori.membrane.facet.Facet;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ import javax.inject.Inject;
 public class FacetsImpl implements Facets {
 
   private final Set<Facet> facets;
-  @Nullable private Set<Entry> entries;
+  @Nullable private List<Entry> entries;
 
   @Inject
   protected FacetsImpl(final Set<Facet> facets) {
@@ -54,7 +55,7 @@ public class FacetsImpl implements Facets {
     if(this.entries != null) {
       throw new IllegalStateException("facets already enabled");
     }
-    this.entries = this.facets.stream().map(Entry::new).collect(Collectors.toSet());
+    this.entries = this.facets.stream().map(Entry::new).collect(Collectors.toList());
     this.entries.forEach(Exceptions.rethrowConsumer(Entry::enable));
   }
 
