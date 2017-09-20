@@ -39,7 +39,9 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class FacetsImpl implements Facets {
 
   private final Set<Facet> facets;
