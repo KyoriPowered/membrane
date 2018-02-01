@@ -30,10 +30,12 @@ public interface Enableable extends Facet {
   /**
    * Enables the facet.
    */
-  void enable();
+  default void enable() {
+  }
 
   /**
    * Disables the facet.
    */
-  void disable();
+  default void disable() {
+  }
 }

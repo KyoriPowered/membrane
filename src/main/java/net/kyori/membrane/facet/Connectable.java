@@ -36,7 +36,8 @@ public interface Connectable extends Facet {
    * @throws IOException if an I/O exception occurs while connecting
    * @throws TimeoutException if a timeout exception occurs while connecting
    */
-  void connect() throws IOException, TimeoutException;
+  default void connect() throws IOException, TimeoutException {
+  }
 
   /**
    * Disconnects from the service.
@@ -44,5 +45,6 @@ public interface Connectable extends Facet {
    * @throws IOException if an I/O exception occurs while disconnecting
    * @throws TimeoutException if a timeout exception occurs while disconnecting
    */
-  void disconnect() throws IOException, TimeoutException;
+  default void disconnect() throws IOException, TimeoutException {
+  }
 }
