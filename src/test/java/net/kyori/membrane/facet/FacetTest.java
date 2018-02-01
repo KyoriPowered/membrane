@@ -34,7 +34,6 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 public class FacetTest {
-
   @Test
   public void test() {
     final Container container = new Container();

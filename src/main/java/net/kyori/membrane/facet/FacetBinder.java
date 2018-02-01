@@ -26,14 +26,12 @@ package net.kyori.membrane.facet;
 import com.google.inject.Binder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.multibindings.Multibinder;
-
-import javax.annotation.Nonnull;
+import net.kyori.blizzard.NonNull;
 
 /**
  * A facet binder.
  */
 public class FacetBinder {
-
   /**
    * The facet set.
    */
@@ -45,12 +43,12 @@ public class FacetBinder {
    * @param binder the binder
    * @return a new facet binder
    */
-  @Nonnull
+  @NonNull
   public static FacetBinder create(final Binder binder) {
     return new FacetBinder(binder);
   }
 
-  protected FacetBinder(@Nonnull final Binder binder) {
+  protected FacetBinder(@NonNull final Binder binder) {
     this.binder = Multibinder.newSetBinder(binder, Facet.class);
   }
 
@@ -62,7 +60,7 @@ public class FacetBinder {
    * @return a binding builder
    * @see Multibinder#addBinding()
    */
-  @Nonnull
+  @NonNull
   public LinkedBindingBuilder<Facet> add() {
     return this.binder.addBinding();
   }
@@ -73,7 +71,7 @@ public class FacetBinder {
    * @param facet the facet
    * @return this facet binder
    */
-  public FacetBinder add(@Nonnull final Class<? extends Facet> facet) {
+  public FacetBinder add(@NonNull final Class<? extends Facet> facet) {
     this.add().to(facet);
     return this;
   }

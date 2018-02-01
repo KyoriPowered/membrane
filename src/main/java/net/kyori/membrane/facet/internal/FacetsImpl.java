@@ -23,6 +23,8 @@
  */
 package net.kyori.membrane.facet.internal;
 
+import net.kyori.blizzard.NonNull;
+import net.kyori.blizzard.Nullable;
 import net.kyori.lunar.exception.Exceptions;
 import net.kyori.membrane.facet.Activatable;
 import net.kyori.membrane.facet.Connectable;
@@ -36,14 +38,11 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class FacetsImpl implements Facets {
-
   private final Set<Facet> facets;
   @Nullable private List<Entry> entries;
 
@@ -70,7 +69,7 @@ public class FacetsImpl implements Facets {
     this.entries = null;
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public Stream<? extends Facet> all() {
     return this.facets.stream();

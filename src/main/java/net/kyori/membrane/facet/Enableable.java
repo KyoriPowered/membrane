@@ -27,7 +27,6 @@ package net.kyori.membrane.facet;
  * A facet that may be enabled.
  */
 public interface Enableable extends Facet {
-
   /**
    * Enables the facet.
    */

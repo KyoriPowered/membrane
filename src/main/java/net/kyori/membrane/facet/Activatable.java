@@ -23,12 +23,11 @@
  */
 package net.kyori.membrane.facet;
 
+import net.kyori.blizzard.NonNull;
+
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-
 public interface Activatable extends Facet {
-
   /**
    * A predicate that matches facets that are not {@link Activatable} or are {@link #active() active}.
    */
@@ -41,7 +40,7 @@ public interface Activatable extends Facet {
    * @return a predicate
    * @see #PREDICATE
    */
-  @Nonnull
+  @NonNull
   static <F extends Facet> Predicate<F> predicate() {
     return (Predicate<F>) PREDICATE;
   }

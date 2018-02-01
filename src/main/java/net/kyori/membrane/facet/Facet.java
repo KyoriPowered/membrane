@@ -30,5 +30,4 @@ package net.kyori.membrane.facet;
  * @see Enableable
  */
 public interface Facet {
-
 }

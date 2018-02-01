@@ -30,7 +30,6 @@ import java.util.concurrent.TimeoutException;
  * A facet that may be connected to a service.
  */
 public interface Connectable extends Facet {
-
   /**
    * Connects to the service.
    *
