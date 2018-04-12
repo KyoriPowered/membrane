@@ -23,7 +23,7 @@
  */
 package net.kyori.membrane.facet;
 
-import net.kyori.blizzard.NonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.function.Predicate;
 
@@ -40,8 +40,7 @@ public interface Activatable extends Facet {
    * @return a predicate
    * @see #PREDICATE
    */
-  @NonNull
-  static <F extends Facet> Predicate<F> predicate() {
+  static <F extends Facet> @NonNull Predicate<F> predicate() {
     return (Predicate<F>) PREDICATE;
   }
 
