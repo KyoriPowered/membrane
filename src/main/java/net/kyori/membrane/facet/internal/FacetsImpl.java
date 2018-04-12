@@ -23,13 +23,13 @@
  */
 package net.kyori.membrane.facet.internal;
 
-import net.kyori.blizzard.NonNull;
-import net.kyori.blizzard.Nullable;
 import net.kyori.lunar.exception.Exceptions;
 import net.kyori.membrane.facet.Activatable;
 import net.kyori.membrane.facet.Connectable;
 import net.kyori.membrane.facet.Enableable;
 import net.kyori.membrane.facet.Facet;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +44,7 @@ import javax.inject.Singleton;
 @Singleton
 public class FacetsImpl implements Facets {
   private final Set<Facet> facets;
-  @Nullable private List<Entry> entries;
+  private @Nullable List<Entry> entries;
 
   @Inject
   protected FacetsImpl(final Set<Facet> facets) {
@@ -69,14 +69,12 @@ public class FacetsImpl implements Facets {
     this.entries = null;
   }
 
-  @NonNull
   @Override
-  public Stream<? extends Facet> all() {
+  public @NonNull Stream<? extends Facet> all() {
     return this.facets.stream();
   }
 
   private static class Entry {
-
     private final Facet facet;
     private boolean enabled;
 

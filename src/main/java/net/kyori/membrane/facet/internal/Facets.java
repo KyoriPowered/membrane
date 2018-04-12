@@ -24,8 +24,8 @@
 package net.kyori.membrane.facet.internal;
 
 import com.google.inject.ImplementedBy;
-import net.kyori.blizzard.NonNull;
 import net.kyori.membrane.facet.Facet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -40,8 +40,7 @@ public interface Facets {
    *
    * @return a stream of all bound facets
    */
-  @NonNull
-  Stream<? extends Facet> all();
+  @NonNull Stream<? extends Facet> all();
 
   /**
    * Gets a stream of all bound facets of the specified type.
@@ -50,8 +49,7 @@ public interface Facets {
    * @param <F> the type
    * @return a stream of all bound facets of the specified type
    */
-  @NonNull
-  default <F extends Facet> Stream<? extends F> of(@NonNull final Class<F> type) {
+  default <F extends Facet> @NonNull Stream<? extends F> of(@NonNull final Class<F> type) {
     return (Stream<? extends F>) this.all().filter(type::isInstance);
   }
 
@@ -63,8 +61,7 @@ public interface Facets {
    * @param <F> the type
    * @return a stream of all bound facets of the specified type
    */
-  @NonNull
-  default <F extends Facet> Stream<? extends F> of(@NonNull final Class<F> type, @NonNull final Predicate<F> predicate) {
+  default <F extends Facet> @NonNull Stream<? extends F> of(@NonNull final Class<F> type, @NonNull final Predicate<F> predicate) {
     return this.of(type).filter(predicate);
   }
 

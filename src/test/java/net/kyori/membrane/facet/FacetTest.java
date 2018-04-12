@@ -27,15 +27,15 @@ import com.google.inject.Guice;
 import net.kyori.membrane.facet.internal.Facets;
 import net.kyori.membrane.facet.internal.FacetsImpl;
 import net.kyori.violet.AbstractModule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FacetTest {
+class FacetTest {
   @Test
-  public void test() {
+  void test() {
     final Container container = new Container();
 
     Guice.createInjector(new AbstractModule() {
