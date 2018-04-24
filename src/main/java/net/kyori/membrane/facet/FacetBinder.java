@@ -24,53 +24,14 @@
 package net.kyori.membrane.facet;
 
 import com.google.inject.Binder;
-import com.google.inject.binder.LinkedBindingBuilder;
-import com.google.inject.multibindings.Multibinder;
+import net.kyori.violet.SetBinder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A facet binder.
  */
-public class FacetBinder {
-  /**
-   * The facet set.
-   */
-  private final Multibinder<Facet> binder;
-
-  /**
-   * Creates a new facet binder.
-   *
-   * @param binder the binder
-   * @return a new facet binder
-   */
-  public static @NonNull FacetBinder create(final Binder binder) {
-    return new FacetBinder(binder);
-  }
-
+public class FacetBinder extends SetBinder<Facet> {
   public FacetBinder(final @NonNull Binder binder) {
-    this.binder = Multibinder.newSetBinder(binder, Facet.class);
-  }
-
-  /**
-   * Returns a binding builder used to add a new element in the set.
-   *
-   * <p>Each bound element must have a distinct value.</p>
-   *
-   * @return a binding builder
-   * @see Multibinder#addBinding()
-   */
-  public @NonNull LinkedBindingBuilder<Facet> add() {
-    return this.binder.addBinding();
-  }
-
-  /**
-   * Adds a facet to the set.
-   *
-   * @param facet the facet
-   * @return this facet binder
-   */
-  public FacetBinder add(final @NonNull Class<? extends Facet> facet) {
-    this.add().to(facet);
-    return this;
+    super(binder, Facet.class);
   }
 }

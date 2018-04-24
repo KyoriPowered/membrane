@@ -44,10 +44,11 @@ class FacetTest {
         this.bind(Facets.class).to(FacetsImpl.class);
 
         this.bind(FacetA.class).to(FacetAImpl.class);
-        FacetBinder.create(this)
-          .add(FacetA.class)
-          .add(FacetB.class)
-          .add(FacetC.class);
+
+        final FacetBinder facets = new FacetBinder(this.binder());
+        facets.addBinding().to(FacetA.class);
+        facets.addBinding().to(FacetB.class);
+        facets.addBinding().to(FacetC.class);
 
         this.requestInjection(container);
       }
