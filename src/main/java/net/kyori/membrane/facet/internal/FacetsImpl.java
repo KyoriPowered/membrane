@@ -1,7 +1,7 @@
 /*
  * This file is part of membrane, licensed under the MIT License.
  *
- * Copyright (c) 2017-2018 KyoriPowered
+ * Copyright (c) 2017-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package net.kyori.membrane.facet.internal;
 
-import net.kyori.lunar.exception.Exceptions;
 import net.kyori.membrane.facet.Activatable;
 import net.kyori.membrane.facet.Connectable;
 import net.kyori.membrane.facet.Enableable;
 import net.kyori.membrane.facet.Facet;
+import net.kyori.mu.function.ThrowingConsumer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -57,7 +57,7 @@ public class FacetsImpl implements Facets {
       throw new IllegalStateException("facets already enabled");
     }
     this.entries = this.facets.stream().map(Entry::new).collect(Collectors.toList());
-    this.entries.forEach(Exceptions.rethrowConsumer(Entry::enable));
+    this.entries.forEach(ThrowingConsumer.of(Entry::enable));
   }
 
   @Override
@@ -65,7 +65,7 @@ public class FacetsImpl implements Facets {
     if(this.entries == null) {
       throw new IllegalStateException("facets were not enabled");
     }
-    this.entries.forEach(Exceptions.rethrowConsumer(Entry::disable));
+    this.entries.forEach(ThrowingConsumer.of(Entry::disable));
     this.entries = null;
   }
 

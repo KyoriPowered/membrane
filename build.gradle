@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-  compile 'net.kyori:lunar:1.0.0'
+  compile 'net.kyori:mu:1.0.0-SNAPSHOT'
   compile 'net.kyori:violet:2.0.0-SNAPSHOT'
   compile 'org.checkerframework:checker-qual:2.4.0'
   testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.3'
